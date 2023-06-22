@@ -13,6 +13,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [isLoadingGithub, setIsLoadingGithub] = React.useState<boolean>(false)
 
   const loginWithGoogle = async () => {
     setIsLoading(true)
@@ -31,6 +32,22 @@ const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
   }
 
 
+  const loginWithGitHub = async () => {
+    setIsLoadingGithub(true)
+
+    try {
+      await signIn('github')
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'There was an error logging in with Github',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsLoadingGithub(false)
+    }
+  }
+
   return (
     <div className={cn('items-center w-full', className)} {...props}>
       <Button
@@ -44,6 +61,17 @@ const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
         Google
       </Button>
   
+
+      <Button
+        isLoadingGithub={isLoadingGithub}
+        type='button'
+        size='sm'
+        className='w-full mt-4'
+        onClick={loginWithGitHub}
+        disabled={isLoadingGithub}>
+        {isLoadingGithub ? null : <Icons.github className='h-4 w-4 mr-2' />}
+        Github
+      </Button>
 
     </div>
   )

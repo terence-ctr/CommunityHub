@@ -5,6 +5,8 @@ import { Icons } from './Icons'
 import { buttonVariants } from './ui/Button'
 import { UserAccountNav } from './UserAccountNav'
 import SearchBar from './SearchBar'
+import Lottie from "lottie-react"
+import animationData from "../assets/logo.json"
 
 const Navbar = async () => {
   const session = await getServerSession(authOptions)
@@ -14,6 +16,7 @@ const Navbar = async () => {
         {/* logo */}
         <Link href='/' className='flex gap-2 items-center'>
           <Icons.logo className='h-8 w-8 sm:h-6 sm:w-6' />
+          {/* <Lottie animationData={animationData} /> */}
           <p className='hidden text-zinc-700 text-sm font-medium md:block'>Community Hub</p>
         </Link>
 

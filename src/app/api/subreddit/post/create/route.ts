@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     // Verify that the user is subscribed to the passed subreddit id
     const subscription = await db.subscription.findFirst({
       where: {
-        // subredditId,
+        subredditId,
         userId: session.user.id,
       },
     })
