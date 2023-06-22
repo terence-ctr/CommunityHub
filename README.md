@@ -1,5 +1,5 @@
 
-# Breadit - A Modern Fullstack Reddit Clone 
+# CommunityHub - A Modern Fullstack Reddit Clone 
 
 Built with the Next.js App Router, TypeScript & Tailwind
 
@@ -19,14 +19,7 @@ Built with the Next.js App Router, TypeScript & Tailwind
 
 
 ## Getting started
-
-To get started with this project, run
-
-```bash
-  git clone -b starter-code https://github.com/joschan21/breadit.git
-```
-
-and copy these .env.example variables into a separate .env file:
+copy these .env.example variables into a separate .env file:
 
 ```bash
 DATABASE_URL=

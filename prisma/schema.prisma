@@ -11,10 +11,10 @@ datasource db {
   relationMode = "prisma"
 }
 
-// enum VoteType {
-//   UP
-//   DOWN
-// }
+enum VoteType {
+  UP
+  DOWN
+}
 
 model Account {
   id                String  @id @default(cuid())
