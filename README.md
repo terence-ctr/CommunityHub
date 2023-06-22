@@ -17,6 +17,8 @@ Built with the Next.js App Router, TypeScript & Tailwind
  - Full comment functionality with nested replies
  - ... and much more
 
+![image](https://github.com/patilsp/CommunityHub/assets/35653819/fed9abd2-fed9-41fd-a055-459d20e366b5)
+
 
 ## Getting started
 copy these .env.example variables into a separate .env file:
