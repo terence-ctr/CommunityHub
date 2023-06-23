@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { FC, useRef } from 'react'
 import EditorOutput from './EditorOutput'
 import PostVoteClient from './post-vote/PostVoteClient'
+import { motion } from 'framer-motion'
 
 type PartialVote = Pick<Vote, 'type'>
 
@@ -31,7 +32,7 @@ const Post: FC<PostProps> = ({
   const pRef = useRef<HTMLParagraphElement>(null)
 
   return (
-    <div className='rounded-md bg-white shadow'>
+    <div className='overflow-hidden h-fit rounded-lg border border-gray-200 order-first md:order-last'>
       <div className='px-6 py-4 flex justify-between'>
         <PostVoteClient
           postId={post.id}
@@ -44,20 +45,22 @@ const Post: FC<PostProps> = ({
             {subredditName ? (
               <>
                 <a
-                  className='underline text-zinc-900 text-sm underline-offset-2'
+                  className='underline text-black-900 text-sm underline-offset-2'
                   href={`/r/${subredditName}`}>
-                  r/{subredditName}
+                  {subredditName}
                 </a>
                 <span className='px-1'>•</span>
               </>
             ) : null}
-            <span>Posted by u/{post.author.username}</span>{' '}
+            <span>Posted by - {post.author.username}</span>{' '}
             {formatTimeToNow(new Date(post.createdAt))}
           </div>
           <a href={`/r/${subredditName}/post/${post.id}`}>
             <h1 className='text-lg font-semibold py-2 leading-6 text-gray-900'>
               {post.title}
             </h1>
+
+            <h6>  {post.content}</h6>
           </a>
 
           <div
@@ -65,7 +68,6 @@ const Post: FC<PostProps> = ({
             ref={pRef}>
             <EditorOutput content={post.content} />
             {pRef.current?.clientHeight === 160 ? (
-              // blur bottom if content is too long
               <div className='absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-white to-transparent'></div>
             ) : null}
           </div>
