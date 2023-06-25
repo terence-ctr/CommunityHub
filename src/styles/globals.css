@@ -79,3 +79,44 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
+
+.btn-primary{
+    width: 306px;
+    height: 53px;
+    background: transparent -webkit-gradient(linear, left top, right top, from(#01D57A), to(#00CC9B)) 0% 0% no-repeat padding-box;
+    background: transparent linear-gradient(90deg, #01D57A 0%, #00CC9B 100%) 0% 0% no-repeat padding-box;
+    -webkit-box-shadow: 0px 10px 11px #7272723B;
+    box-shadow: 0px 10px 11px #7272723B;
+    border: 1px solid #fff;
+    border-radius: 8px;
+    opacity: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-decoration: none;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    position: relative;
+}
+
+.form-control{
+  cursor: pointer;
+  width: 501px;
+  height: 65px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  -webkit-box-shadow: 4px 12px 24px rgba(154,158,170,0.21176);
+  box-shadow: 4px 12px 24px rgba(154,158,170,0.21176);
+  border: 1px solid #ffb947;
+  border-radius: 8px;
+  vertical-align: top;
+  padding-left: 53px;
+}
+.form-control:hover{
+  border-color: #656565;
+}

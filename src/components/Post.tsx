@@ -77,7 +77,7 @@ const Post: FC<PostProps> = ({
       <div className='bg-gray-50 z-20 text-sm px-4 py-4 sm:px-6'>
         <Link
           href={`/r/${subredditName}/post/${post.id}`}
-          className='w-fit flex items-center gap-2'>
+          className='w-fit flex items-center gap-2 ml-3'>
           <MessageSquare className='h-4 w-4' /> {commentAmt} comments
         </Link>
       </div>

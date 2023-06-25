@@ -14,8 +14,6 @@ export async function POST(req: Request) {
     if (!session?.user) {
       return new Response('Unauthorized', { status: 401 })
     }
-
-    // Verify that the user is subscribed to the passed subreddit id
     const subscription = await db.subscription.findFirst({
       where: {
         subredditId,
