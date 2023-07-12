@@ -3,13 +3,12 @@ import { db } from '@/lib/db'
 import { z } from 'zod'
 
 export async function GET(req: Request) {
-  const url = new URL(req.url)
-
   const session = await getAuthSession()
+  const url = new URL(req.url)
 
   let followedCommunitiesIds: string[] = []
 
-  if (session) {
+  if (session?.user) {
     const followedCommunities = await db.subscription.findMany({
       where: {
         userId: session.user.id,
@@ -19,7 +18,9 @@ export async function GET(req: Request) {
       },
     })
 
-    followedCommunitiesIds = followedCommunities.map((sub) => sub.subreddit.id)
+    followedCommunitiesIds = followedCommunities.map(
+      ({ subreddit }) => subreddit.id
+    )
   }
 
   try {
@@ -55,7 +56,7 @@ export async function GET(req: Request) {
 
     const posts = await db.post.findMany({
       take: parseInt(limit),
-      skip: (parseInt(page) - 1) * parseInt(limit), // skip should start from 0 for page 1
+      skip: (parseInt(page) - 1) * parseInt(limit),
       orderBy: {
         createdAt: 'desc',
       },
@@ -70,6 +71,12 @@ export async function GET(req: Request) {
 
     return new Response(JSON.stringify(posts))
   } catch (error) {
-    return new Response('Could not fetch posts', { status: 500 })
+    if (error instanceof z.ZodError) {
+      return new Response('Invalid request data passed', { status: 422 })
+    }
+
+    return new Response('Could not fetch more posts, please try again later', {
+      status: 500,
+    })
   }
 }

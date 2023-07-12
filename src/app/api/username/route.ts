@@ -12,9 +12,9 @@ export async function PATCH(req: Request) {
     }
 
     const body = await req.json()
+
     const { name } = UsernameValidator.parse(body)
 
-    // check if username is taken
     const username = await db.user.findFirst({
       where: {
         username: name,
@@ -25,7 +25,7 @@ export async function PATCH(req: Request) {
       return new Response('Username is taken', { status: 409 })
     }
 
-    // update username
+    // update user
     await db.user.update({
       where: {
         id: session.user.id,
@@ -37,15 +37,12 @@ export async function PATCH(req: Request) {
 
     return new Response('OK')
   } catch (error) {
-    (error)
-
     if (error instanceof z.ZodError) {
-      return new Response(error.message, { status: 400 })
+      return new Response('Invalid request data passed', { status: 422 })
     }
 
-    return new Response(
-      'Could not update username at this time. Please try later',
-      { status: 500 }
-    )
+    return new Response('Could not update username, please try again later', {
+      status: 500,
+    })
   }
 }

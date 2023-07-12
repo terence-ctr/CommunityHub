@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,13 +8,8 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum VoteType {
-  UP
-  DOWN
-}
-
-model Account {
-  id                String  @id @default(cuid())
+model account {
+  id                String  @id
   userId            String
   type              String
   provider          String
@@ -30,106 +22,84 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId], map: "Account_provider_providerAccountId_key")
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
+model comment {
+  id        String   @id
+  text      String
+  createdAt DateTime @default(now())
+  authorId  String
+  postId    String
+  replyToId String?
+  commentId String?
+}
+
+model commentvote {
+  userId    String
+  commentId String
+  type      commentvote_type
+
+  @@id([userId, commentId])
+}
+
+model post {
+  id          String    @id
+  title       String
+  content     String?
+  createdAt   DateTime? @db.Date
+  updatedAt   DateTime? @db.Date
+  authorId    String
+  subredditId String
+}
+
+model session {
+  id           String   @id
+  sessionToken String   @unique(map: "Session_sessionToken_key")
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id                String         @id @default(cuid())
-  name              String?
-  email             String?        @unique
-  emailVerified     DateTime?
-  createdSubreddits Subreddit[]    @relation("CreatedBy")
-  subscriptions     Subscription[]
-  votes             Vote[]
-  username String? @unique
-  image       String?
-  accounts    Account[]
-  sessions    Session[]
-  Post        Post[]
-  Comment     Comment[]
-  CommentVote CommentVote[]
-}
-
-model Subreddit {
-  id        String   @id @default(cuid())
-  name      String   @unique
+model subreddit {
+  id        String   @id
+  name      String   @unique(map: "Subreddit_name_key")
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  posts     Post[]
+  updatedAt DateTime
+  creatorId String?
 
-  creatorId   String?
-  Creator     User?          @relation("CreatedBy", fields: [creatorId], references: [id])
-  subscribers Subscription[]
-
-  @@index([name])
+  @@index([name], map: "Subreddit_name_idx")
 }
 
-model Subscription {
-  user        User      @relation(fields: [userId], references: [id])
+model subscription {
   userId      String
-  subreddit   Subreddit @relation(fields: [subredditId], references: [id])
   subredditId String
 
   @@id([userId, subredditId])
 }
 
-model Post {
-  id          String    @id @default(cuid())
-  title       String
-  content     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime  @updatedAt
-  author      User      @relation(fields: [authorId], references: [id])
-  authorId    String
-  subreddit   Subreddit @relation(fields: [subredditId], references: [id])
-  subredditId String
-  comments    Comment[] 
-  votes       Vote[]
+model user {
+  id            String    @id
+  name          String?
+  email         String?   @unique(map: "User_email_key")
+  emailVerified DateTime?
+  username      String?   @unique(map: "User_username_key")
+  image         String?
 }
 
-model Comment {
-  id        String   @id @default(cuid())
-  text      String
-  createdAt DateTime @default(now())
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String
-
-  replyToId String?
-  replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  replies   Comment[] @relation("ReplyTo")
-
-  votes     CommentVote[]
-  commentId String?
-}
-
-model Vote {
-  user   User     @relation(fields: [userId], references: [id])
+model vote {
   userId String
-  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
-  type   VoteType
+  type   vote_type
 
   @@id([userId, postId])
 }
 
-model CommentVote {
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId String
-  type      VoteType
+enum commentvote_type {
+  UP
+  DOWN
+}
 
-  @@id([userId, commentId])
+enum vote_type {
+  UP
+  DOWN
 }

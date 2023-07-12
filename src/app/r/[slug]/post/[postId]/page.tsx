@@ -11,7 +11,7 @@ import { ArrowBigDown, ArrowBigUp, Loader2 } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
-interface SubRedditPostPageProps {
+interface PageProps {
   params: {
     postId: string
   }
@@ -20,7 +20,8 @@ interface SubRedditPostPageProps {
 export const dynamic = 'force-dynamic'
 export const fetchCache = 'force-no-store'
 
-const SubRedditPostPage = async ({ params }: SubRedditPostPageProps) => {
+const Page = async ({ params }: PageProps) => {
+
   const cachedPost = (await redis.hgetall(
     `post:${params.postId}`
   )) as CachedPost
@@ -43,7 +44,7 @@ const SubRedditPostPage = async ({ params }: SubRedditPostPageProps) => {
 
   return (
     <div>
-      <div className='h-full flex flex-col sm:flex-row items-center sm:items-start justify-between shadow mb-2'>
+      <div className="h-full flex flex-col sm:flex-row items-center sm:items-start justify-between">
         <Suspense fallback={<PostVoteShell />}>
           {/* @ts-expect-error server component */}
           <PostVoteServer
@@ -61,21 +62,24 @@ const SubRedditPostPage = async ({ params }: SubRedditPostPageProps) => {
           />
         </Suspense>
 
-        <div className='sm:w-0 w-full flex-1 bg-white p-4 rounded-sm'>
-          <p className='max-h-40 mt-1 truncate text-xs text-gray-500'>
-            Posted by - {post?.author.username ?? cachedPost.authorUsername}{' '}
+        <div className="sm:w-0 w-full flex-1 bg-white p-4 rounded-sm">
+          <p className="max-h-40 mt-1 truncate text-xs text-gray-500">
+            Posted by u/{post?.author.username ?? cachedPost.authorUsername}{' '}
             {formatTimeToNow(new Date(post?.createdAt ?? cachedPost.createdAt))}
           </p>
-          <h1 className='text-xl font-semibold py-2 leading-6 text-gray-900'>
+
+          <h1 className="text-xl font-semibold py-2 leading-6 text-gray-900">
             {post?.title ?? cachedPost.title}
           </h1>
 
           <EditorOutput content={post?.content ?? cachedPost.content} />
+
           <Suspense
             fallback={
-              <Loader2 className='h-5 w-5 animate-spin text-zinc-500' />
-            }>
-            {/* @ts-expect-error Server Component */}
+              <Loader2 className="h-5 w-5 animate-spin text-zinc-500" />
+            }
+          >
+            {/* @ts-expect-error server component */}
             <CommentsSection postId={post?.id ?? cachedPost.id} />
           </Suspense>
         </div>
@@ -84,25 +88,22 @@ const SubRedditPostPage = async ({ params }: SubRedditPostPageProps) => {
   )
 }
 
-function PostVoteShell() {
+const PostVoteShell = () => {
   return (
-    <div className='flex items-center flex-col pr-6 w-20'>
-      {/* upvote */}
+    <div className="flex items-center flex-col pr-6 w-20">
       <div className={buttonVariants({ variant: 'ghost' })}>
-        <ArrowBigUp className='h-5 w-5 text-zinc-700' />
+        <ArrowBigUp className="h-5 w-5 text-zinc-700" />
       </div>
 
-      {/* score */}
-      <div className='text-center py-2 font-medium text-sm text-zinc-900'>
-        <Loader2 className='h-3 w-3 animate-spin' />
+      <div className="text-center py-2 font-medium text-sm text-zinc-900">
+        <Loader2 className="h-3 w-3 animate-spin" />
       </div>
 
-      {/* downvote */}
       <div className={buttonVariants({ variant: 'ghost' })}>
-        <ArrowBigDown className='h-5 w-5 text-zinc-700' />
+        <ArrowBigDown className="h-5 w-5 text-zinc-700" />
       </div>
     </div>
   )
 }
 
-export default SubRedditPostPage
+export default Page

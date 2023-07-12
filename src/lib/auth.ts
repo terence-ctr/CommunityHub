@@ -1,9 +1,8 @@
-import { db } from '@/lib/db'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { nanoid } from 'nanoid'
 import { NextAuthOptions, getServerSession } from 'next-auth'
-import  GoogleProvider from 'next-auth/providers/google'
-import  GitHubProvider from 'next-auth/providers/github'
+import { db } from './db'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import GoogleProvider from 'next-auth/providers/google'
+import { nanoid } from 'nanoid'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -17,10 +16,6 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
   callbacks: {
@@ -44,7 +39,7 @@ export const authOptions: NextAuthOptions = {
       })
 
       if (!dbUser) {
-        token.id = user.id
+        token.id = user!.id
         return token
       }
 
@@ -58,7 +53,6 @@ export const authOptions: NextAuthOptions = {
           },
         })
       }
-
       return {
         id: dbUser.id,
         name: dbUser.name,
